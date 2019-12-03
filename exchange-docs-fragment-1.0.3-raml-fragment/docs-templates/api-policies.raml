@@ -1,0 +1,133 @@
+#%RAML 1.0 DocumentationItem
+title: API Policies
+content: | 
+  ACME Banking  API policies are implemented as part of proxy application which is deployed by API Manager.
+
+      There are few policies are applied to ACME Banking  API:
+
+  1. Client ID Enforcement Policy
+  2. Spike Control Policy
+  3. CORS Policy
+
+  ### Client Id Enforcement Policy
+
+  All requests sent from a specific API consumer to the ACME Banking API may be subject to a client If enforcement.
+
+  Client Id enforcement enables the client to get authorised to be able to use the acme banking api. Received request from client must have few parameters indicating if the user has an access to this service or not. If request has the required details or has invalid data, request will not be executed and the client will get 401 unauthorised status code.
+
+  ##### **Required Values**
+
+  <table>
+  <tr><td><b>Parameter</b></td><td><b>Location</b></td><td><b>Description</b></td></tr>
+  <tr><td>X-Client-ID</td><td>Request Header</td><td>Client ID is a unique identifier assigned to the client application.</td>
+  </tr><tr><td>X-Client-Secret</td><td>Request Header</td><td>Client Secret is a secret key assigned to the client ID parameter and attached to a particular application.</td></tr>
+  </table>
+
+  Please visit [FAQ page](refer to FAQ page) for more information about how to get an access to ACME banking API.
+
+  ### Spike Control Policy
+
+  All requests sent from a specific API consumer to the ACME banking API may be subject to a spike control.
+
+  Spike control restricts the number of requests which the API accepts for processing over a given period of time (time window). If the number of requests exceeds the configured limit then subsequent requests are queued for retrying based on configured variables. If it failed again to be processed, then it will be rejected.
+
+  Headers are not exposed not the client when Spike control is applied.
+
+  ##### **Spike Control Configurations**
+
+  <table>
+  <tr>
+  <td><b>Variable</b></td>
+  <td><b>Value</b></td>
+  <td><b>Description</b></td>
+  </tr>
+  <tr>
+  <td>Number of Reqs</td>
+  <td>10</td>
+  <td>Maximum quota allowed per time window.</td>
+  </tr>
+  <tr>
+  <td>Time Period</td>
+  <td>500</td>
+  <td>Window's size in milliseconds.</td>
+  </tr>
+  <tr>
+  <td>Delay Time in Milliseconds</td>
+  <td>500</td>
+  <td>Amount of time request will be delayed before retrying (delaying is a CPU intensive process).</td>
+  </tr>
+  <tr>
+  <td>Delay Attempts</td>
+  <td>3</td>
+  <td>The maximum number of times the policy will try to process the request if there is no quota available</td>
+  </tr>
+  <tr>
+  <td>Queuing Limit</td>
+  <td>5</td>
+  <td>The maximum number of concurrent requests that can be waiting to be retried.</td>
+  </tr>
+
+
+
+  </table>
+
+  ### CORS Policy
+
+  All requests sent from a specific API consumer to the ACME Banking API may be subject to a CORS policy.
+
+  ##### **CORS Overview**
+
+  **CORS** is a mechanism that allows restricted resources on a web page to be requested from another domain outside the domain from which the first resource was served. A web page may freely embed cross-origin images, stylesheets, scripts, iframes, and videos. Certain "cross-domain" requests, notably Ajax requests, are forbidden by default by the same-origin security policy.
+
+  If you ever worked with an AJAX call, you are probably familiar with the following error displayed in browser console:
+
+  ![https://miro.medium.com/max/3200/0*bI2yxKryqJzyUkud](https://miro.medium.com/max/3200/0*bI2yxKryqJzyUkud)
+
+  There are few reasons why a client might get this blockage message. For example:
+
+  - Client is not hosted on a sub-domain of API's domain
+  - Client is a sub-domain of API's domain, but client send non-simple request (e.g. JSON) 
+
+  API needs to be configured with CORS policy to avoid the blockage by doing a** pre-flight check request. **
+
+  ##### **Pre-Flight Check**
+
+  **A CORS preflight check request** is a CORS request that checks to see if the CORS protocol is understood and a server is aware using specific methods and headers. 
+
+  It is an OPTIONS request, using three HTTP request headers: _Access-Control-Request-Method, Access-Control-Request-Headers, and the Origin header_. A preflight request is automatically issued by a browser and in normal cases, front-end developers don't need to craft such requests themselves. It appears when request is qualified as "to be preflighted" and ommited for simple requests.
+
+  Below diagram shows how it works. 
+
+  ![https://miro.medium.com/max/1384/1*BjtgXIKW4fts-ZLP58DknA.png](https://miro.medium.com/max/1384/1*BjtgXIKW4fts-ZLP58DknA.png)
+
+  For example, a client might be asking a server if it would allow a **GET**`\`request, before sending a`GET\` request, by using a preflight request:
+
+  ```
+  OPTIONS http://acme-api-url
+  Access-Control-Request-Method: GET 
+  Access-Control-Request-Headers: origin, x-requested-with
+  Origin: https://foo.bar.org
+  ```
+
+  If the server allows it, then it will respond to the preflight request with an [`Access-Control-Allow-Methods`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Methods "The Access-Control-Allow-Methods response header specifies the method or methods allowed when accessing the resource in response to a preflight request.") response header, which lists `GET`:
+
+  ```
+  HTTP/1.1 204 No Content
+  Connection: keep-alive
+  Access-Control-Allow-Origin: https://foo.bar.org
+  Access-Control-Allow-Methods:  GET, 
+  Access-Control-Max-Age: 86400
+  ```
+
+
+  The preflight response can be optionally cached for the requests created in the same url using [Access-Control-Max-Age](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Max-Age) header like in the above example.
+
+  ##### **CORS Configuration Example**
+  ![https://miro.medium.com/max/3256/1*R7pyv-Hu24PHVLesSzu5Bw.png](https://miro.medium.com/max/3256/1*R7pyv-Hu24PHVLesSzu5Bw.png)
+
+
+  ##### Resources
+
+  ##### [1]: [https://en.wikipedia.org/wiki/Cross-origin\_resource\_sharing](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
+
+  ##### [2]: [https://developer.mozilla.org/en-US/docs/Glossary/Preflight\_request](https://developer.mozilla.org/en-US/docs/Glossary/Preflight_request)

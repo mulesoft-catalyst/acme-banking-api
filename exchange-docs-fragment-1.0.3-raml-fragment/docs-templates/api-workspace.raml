@@ -1,0 +1,98 @@
+#%RAML 1.0 DocumentationItem
+title: API Workspace
+content: |
+  This page will describe the usage instcution for ACMEBanking API.
+
+  ### ACMEBanking workspace configurations
+
+  #### Application Details
+
+  <table>
+  <tr><td><b>Config Param</b></td><td><b>Details</b></td></tr>
+  <tr><td>Application Name</td><td>{{ENV}}-ACMEBanking</td></tr>
+  <tr><td>Connector Name</td><td>acme-banking</td></tr>
+  <tr><td>Application name in logger</td><td>exp-ACMEBanking</td></tr>
+  <tr><td>Debug Logger Category</td><td>co.nz.acmebanking.logger.${logger.app.name}.${logger.app.version}.${env}</td></tr>
+  <tr><td>Application repository</td><td>https://github.com/ACMEBanking/acme-banking-api</td></tr>
+  <tr><td>Postman Collection repository</td><td>https://github.com/ACMEBanking/acme-banking-artefacts</td></tr>
+  </table>
+
+  #### Domains
+
+  <table>
+  <tr><td><b>Domain Type</b></td><td><b>Domain</b></td></tr>
+  <tr><td>External Domain</td><td>api.acmebanking.govt.nz</td></tr>
+  <tr><td>Internal Domain</td><td>api.acmebanking-int.govt.nz</td></tr>
+  </table>
+
+  #### Environments
+
+  <table>
+  <tr><td><b>Environment</b></td><td><b>Key</b></td><td><b>Value</b></td></tr>
+  <tr><td>Development</td><td>env</td><td>dev</td></tr>
+  <tr><td>Quality Assurance</td><td>env</td><td>qa</td></tr>
+  <tr><td>User Acceptance Test</td><td>env</td><td>stage</td></tr>
+  <tr><td>Production</td><td>env</td><td>prod</td></tr>
+  </table>
+
+  #### Uniform Resource Identifier
+
+  <table>
+  <tr><td><b>Method</b></td><td><b>Base Path</b></td><td><b>Resource</b></td><td><b>Function Name</b></td><td><b>description</b></td></tr>
+  <tr><td>GET</td><td>/customer</td><td>/customer</td><td>Search customer in X Bank</td><td>returns a list of matching customers </td></tr>
+  <tr><td>GET</td><td>/customer</td><td>/customer/{ssn}</td><td>Search a unique customer details</td><td>returns full details for a particular customer</td></tr>
+  </table>
+
+  ------
+
+  ### Resources Details
+
+  _Resources Information_
+
+  <table>
+  <tr><td><b>Attribute</b></td><td><b>Details</b></td></tr>
+  <tr><td>Protocol</td><td>HTTPS</td></tr>
+  <tr><td>Service Type</td><td>REST</td></tr>
+  <tr><td>Response Format</td><td>JSON</td></tr>
+  <tr><td>Authentication</td><td>Required</td></tr>
+  <tr><td>Rate Limiting</td><td>10 calls per second. If rate limit is exceeded, calls will be queued. Calls unprocessed for over 1 second will time out.
+  </td></tr>
+  </table>
+
+  #### **/customer**
+
+  ##### **Function Name**: Search Customer function
+
+  _End Points_
+
+  <table>
+  <tr><td><b>Environment</b></td><td><b>End point</b></td></tr>
+  <tr><td>DEV</td><td>https://dev.api.acmebanking.govt.nz/ACMEBanking/v1/customer</td></tr>
+  <tr><td>QA</td><td>https://qa.api.acmebanking.govt.nz/ACMEBanking/v1/customer</td></tr>
+  <tr><td>UAT/stage</td><td>https://stage.api.acmebanking.govt.nz/ACMEBanking/v1/customer</td></tr>
+  <tr><td>Production</td><td>https://api.acmebanking.govt.nz/ACMEBanking/v1/customer</td></tr>
+  </table>
+
+  _Headers_
+
+  <table>
+  <tr><td><b>Parameters</b></td><td><b>Description</b></td></tr>
+  <tr><td>X-Client-ID</td><td>Client ID is a unique identifier assigned to the client application.
+  </td></tr>
+  <tr><td>X-Client-Secret</td><td>Client Secret is a secret key assigned to the client ID parameter and attached to a particular application.</td></tr>
+  </table>
+
+  _Query Parameters_
+
+  <table>
+  <tr><td><b>Parameters</b></td><td><b>Description</b></td></tr>
+  <tr><td>type</td><td>Type of customers to search. </td></tr>
+  <tr><td>maxResultSet</td><td>The maximum number of rows to be returned by customer search
+  </td></tr>
+  </table>
+
+  _URI Parameters_
+
+  N/A
+
+  #### Please visit the following [page](refer to summary page) for more information about parameters, error types and how to use the service.
